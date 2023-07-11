@@ -2,12 +2,20 @@ package com.example.StudentMangementSystem.controller;
 
 import com.example.StudentMangementSystem.entity.Student;
 import com.example.StudentMangementSystem.service.StudentService;
+import com.example.StudentMangementSystem.utils.ExcelGenerator;
+import com.example.StudentMangementSystem.utils.PdfGenerator;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import java.util.List;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 @Controller
 public class StudentController {
@@ -34,6 +42,32 @@ public class StudentController {
         model.addAttribute("student", student);
         return "create_student";
 
+    }
+
+    @GetMapping("/students/export_excel")
+    public void exportExcel(HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/octet-stream");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=student"+ ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List<Student> listOfStudents = studentService.getAllStudents();
+        ExcelGenerator generator = new ExcelGenerator(listOfStudents);
+        generator.generateExcelFile(response);
+
+    }
+
+    @GetMapping("/students/export_pdf")
+    public void generatePdfFile(HttpServletResponse response) throws IOException {
+        response.setContentType("application/pdf");
+        String headerkey = "Content-Disposition";
+        String headervalue = "attachment; filename=student"+ ".pdf";
+        response.setHeader(headerkey, headervalue);
+
+        List<Student> listOfStudents = studentService.getAllStudents();
+        PdfGenerator generator = new PdfGenerator();
+        generator.generate(listOfStudents, response);
     }
 
     @PostMapping("/students")

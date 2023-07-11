@@ -26,15 +26,19 @@ public class Student {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "mobile_number")
+    private String mobileNumber;
+
     public Student() {
 
     }
 
-    public Student(String firstName, String lastName, String email) {
+    public Student(String firstName, String lastName, String email, String mobileNumber) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.mobileNumber = mobileNumber;
     }
     public Long getId() {
         return id;
@@ -59,5 +63,20 @@ public class Student {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getStudentName(){
+        return this.firstName + " " + this.lastName;
+    }
+
+    public void setMobileNumber(String mobileNumber){this.mobileNumber = mobileNumber;}
+
+    public String getMobileNumber() {
+
+        if (this.mobileNumber == null) {
+            return "N/A";
+        } else {
+            return this.mobileNumber;
+        }
     }
 }
